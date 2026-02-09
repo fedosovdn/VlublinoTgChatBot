@@ -1,0 +1,9 @@
+﻿services:
+  vlublinotgchatbot:
+    image: vlublinotgchatbot
+    build:
+      context: .
+      dockerfile: src/VlublinoTgChatBot/Dockerfile
+    env_file:
+      - .env
+
