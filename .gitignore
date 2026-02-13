@@ -39,3 +39,12 @@ msbuild.wrn
 
 # Application crash log
 Fatal.log
+
+# Docker local overrides and data
+.env
+.env.*
+!.env.example
+docker-compose.override.yml
+docker-compose.local.yml
+docker-data/
+.docker/

@@ -7,17 +7,17 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/VlublinoTgChatBot/VlublinoTgChatBot.csproj", "src/VlublinoTgChatBot/"]
-RUN dotnet restore "src/VlublinoTgChatBot/VlublinoTgChatBot.csproj"
+COPY ["src/VlublinoTgChatBot.WebApi/VlublinoTgChatBot.WebApi.csproj", "src/VlublinoTgChatBot.WebApi/"]
+RUN dotnet restore "src/VlublinoTgChatBot.WebApi/VlublinoTgChatBot.WebApi.csproj"
 COPY . .
-WORKDIR "/src/src/VlublinoTgChatBot"
-RUN dotnet build "./VlublinoTgChatBot.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/src/VlublinoTgChatBot.WebApi"
+RUN dotnet build "./VlublinoTgChatBot.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./VlublinoTgChatBot.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./VlublinoTgChatBot.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "VlublinoTgChatBot.dll"]
+ENTRYPOINT ["dotnet", "VlublinoTgChatBot.WebApi.dll"]
