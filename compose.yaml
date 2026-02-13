@@ -1,9 +1,9 @@
 ﻿services:
   vlublinotgchatbot:
-    image: vlublinotgchatbot
-    build:
-      context: .
-      dockerfile: src/VlublinoTgChatBot/Dockerfile
+    image: fedosovdn/vlublinotgchatbot:1.0.0
+    container_name: vlublinotgchatbot
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
     env_file:
       - .env
-
