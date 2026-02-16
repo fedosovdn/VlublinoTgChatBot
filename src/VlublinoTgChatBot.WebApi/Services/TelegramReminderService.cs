@@ -29,7 +29,7 @@ internal sealed class TelegramReminderService : BackgroundService
             var nextUtc = config.Schedule.GetNextOccurrence(DateTimeOffset.UtcNow, config.TimeZone);
             if (nextUtc is null)
             {
-                _logger.LogWarning("No future occurrences for cron schedule.");
+                _logger.LogWarning("Для расписания cron в будущем не будет никаких событий");
                 break;
             }
 
@@ -53,7 +53,7 @@ internal sealed class TelegramReminderService : BackgroundService
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Не удалось отправить напоминание в чат {ChatId}.", chatId);
+                    _logger.LogError(ex, "Не удалось отправить напоминание в чат {ChatId}", chatId);
                 }
             }
         }

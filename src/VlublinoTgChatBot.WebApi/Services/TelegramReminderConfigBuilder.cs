@@ -25,7 +25,7 @@ internal sealed class TelegramReminderConfigBuilder
 
     public bool TryBuild(out ReminderConfig config)
     {
-        config = default!;
+        config = null!;
 
         var options = _optionsMonitor.CurrentValue;
         if (string.IsNullOrWhiteSpace(options.BotToken))
