@@ -20,7 +20,7 @@ internal sealed class ChatIdParser
             return results;
         }
 
-        var parts = chatIdsValue.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        var parts = chatIdsValue.Split([',', ';', ' '], StringSplitOptions.RemoveEmptyEntries);
         foreach (var part in parts)
         {
             if (long.TryParse(part, NumberStyles.Integer, CultureInfo.InvariantCulture, out var id))
@@ -29,7 +29,7 @@ internal sealed class ChatIdParser
             }
             else
             {
-                _logger.LogWarning("Skipping invalid chat id: {ChatId}.", part);
+                _logger.LogWarning("Пропуск некорректного chat id: {ChatId}.", part);
             }
         }
 

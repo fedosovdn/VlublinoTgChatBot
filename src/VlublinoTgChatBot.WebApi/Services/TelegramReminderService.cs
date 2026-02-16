@@ -53,7 +53,7 @@ internal sealed class TelegramReminderService : BackgroundService
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to send reminder to chat {ChatId}.", chatId);
+                    _logger.LogError(ex, "Не удалось отправить напоминание в чат {ChatId}.", chatId);
                 }
             }
         }

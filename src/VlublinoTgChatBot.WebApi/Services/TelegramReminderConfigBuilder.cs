@@ -1,4 +1,4 @@
-using Cronos;
+﻿using Cronos;
 using Microsoft.Extensions.Options;
 using VlublinoTgChatBot.WebApi.Options;
 
@@ -30,26 +30,26 @@ internal sealed class TelegramReminderConfigBuilder
         var options = _optionsMonitor.CurrentValue;
         if (string.IsNullOrWhiteSpace(options.BotToken))
         {
-            _logger.LogWarning("TG_BOT_TOKEN is not set. Reminder service is disabled.");
+            _logger.LogWarning("TG_BOT_TOKEN не задан. Сервис напоминаний отключен.");
             return false;
         }
 
         var chatIds = _chatIdParser.Parse(options.ChatIds);
         if (chatIds.Count == 0)
         {
-            _logger.LogWarning("TG_CHAT_IDS is empty. Reminder service is disabled.");
+            _logger.LogWarning("TG_CHAT_IDS пуст. Сервис напоминаний отключен.");
             return false;
         }
 
         if (string.IsNullOrWhiteSpace(options.ScheduleCron))
         {
-            _logger.LogWarning("TG_SCHEDULE_CRON is not set. Reminder service is disabled.");
+            _logger.LogWarning("TG_SCHEDULE_CRON не задан. Сервис напоминаний отключен.");
             return false;
         }
 
         if (!CronExpression.TryParse(options.ScheduleCron, CronFormat.Standard, out var schedule))
         {
-            _logger.LogWarning("TG_SCHEDULE_CRON has invalid format: {Cron}.", options.ScheduleCron);
+            _logger.LogWarning("TG_SCHEDULE_CRON имеет неверный формат: {Cron}.", options.ScheduleCron);
             return false;
         }
 
@@ -58,7 +58,7 @@ internal sealed class TelegramReminderConfigBuilder
         {
             if (!_timeZoneResolver.TryResolve(options.TimeZoneId, out timeZone))
             {
-                _logger.LogWarning("TG_TIMEZONE not found: {TimeZone}. Using UTC.", options.TimeZoneId);
+                _logger.LogWarning("TG_TIMEZONE не найден: {TimeZone}. Используется UTC.", options.TimeZoneId);
                 timeZone = TimeZoneInfo.Utc;
             }
         }
