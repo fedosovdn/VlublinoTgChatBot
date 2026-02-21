@@ -6,13 +6,16 @@ internal sealed class TelegramReminderService : BackgroundService
 {
     private readonly ILogger<TelegramReminderService> _logger;
     private readonly TelegramReminderConfigBuilder _configBuilder;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public TelegramReminderService(
         ILogger<TelegramReminderService> logger,
-        TelegramReminderConfigBuilder configBuilder)
+        TelegramReminderConfigBuilder configBuilder,
+        IDateTimeProvider dateTimeProvider)
     {
         _logger = logger;
         _configBuilder = configBuilder;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -26,14 +29,15 @@ internal sealed class TelegramReminderService : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            var nextUtc = config.Schedule.GetNextOccurrence(DateTimeOffset.UtcNow, config.TimeZone);
+            var nowUtc = _dateTimeProvider.GetUtcNow();
+            var nextUtc = config.Schedule.GetNextOccurrence(nowUtc, config.TimeZone);
             if (nextUtc is null)
             {
                 _logger.LogWarning("Для расписания cron в будущем не будет никаких событий");
                 break;
             }
 
-            var delay = nextUtc.Value - DateTimeOffset.UtcNow;
+            var delay = nextUtc.Value - nowUtc;
             if (delay < TimeSpan.Zero)
             {
                 delay = TimeSpan.Zero;

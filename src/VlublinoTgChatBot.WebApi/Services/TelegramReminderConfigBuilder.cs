@@ -8,17 +8,20 @@ internal sealed class TelegramReminderConfigBuilder
 {
     private readonly ILogger<TelegramReminderConfigBuilder> _logger;
     private readonly IOptionsMonitor<TelegramReminderOptions> _optionsMonitor;
+    private readonly IOptionsMonitor<TelegramBotOptions> _botOptionsMonitor;
     private readonly ChatIdParser _chatIdParser;
     private readonly TimeZoneResolver _timeZoneResolver;
 
     public TelegramReminderConfigBuilder(
         ILogger<TelegramReminderConfigBuilder> logger,
         IOptionsMonitor<TelegramReminderOptions> optionsMonitor,
+        IOptionsMonitor<TelegramBotOptions> botOptionsMonitor,
         ChatIdParser chatIdParser,
         TimeZoneResolver timeZoneResolver)
     {
         _logger = logger;
         _optionsMonitor = optionsMonitor;
+        _botOptionsMonitor = botOptionsMonitor;
         _chatIdParser = chatIdParser;
         _timeZoneResolver = timeZoneResolver;
     }
@@ -28,13 +31,14 @@ internal sealed class TelegramReminderConfigBuilder
         config = null!;
 
         var options = _optionsMonitor.CurrentValue;
-        if (string.IsNullOrWhiteSpace(options.BotToken))
+        var botOptions = _botOptionsMonitor.CurrentValue;
+        if (string.IsNullOrWhiteSpace(botOptions.BotToken))
         {
             _logger.LogWarning("TG_BOT_TOKEN не задан. Сервис напоминаний отключен.");
             return false;
         }
 
-        var chatIds = _chatIdParser.Parse(options.ChatIds);
+        var chatIds = _chatIdParser.Parse(botOptions.ChatIds);
         if (chatIds.Count == 0)
         {
             _logger.LogWarning("TG_CHAT_IDS пуст. Сервис напоминаний отключен.");
@@ -68,7 +72,7 @@ internal sealed class TelegramReminderConfigBuilder
             : options.Message;
 
         config = new ReminderConfig(
-            options.BotToken,
+            botOptions.BotToken,
             chatIds,
             schedule,
             timeZone,
