@@ -1,6 +1,6 @@
 ﻿services:
   vlublinotgchatbot:
-    image: fedosovdn/vlublinotgchatbot:1.0.0
+    image: fedosovdn/vlublinotgchatbot:1.0.1
     container_name: vlublinotgchatbot
     restart: unless-stopped
     ports:
